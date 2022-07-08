@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <div id="app" class="container">
+        <div class="col-lg-6 offset-lg-4" style:>
+            <h1>Entre em contato com a Dime</h1>
+            <p>Preencha os campos abaixo para falar com a nossa equipe de atendimento</p>
+        </div>
+        <h2 class="mb-5"></h2>
+
+        <form class="col-lg-4 offset-lg-4" >
+            <div class="form-group form-control-lg" >
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" v-model="nome">
+            </div>
+            <div class="form-group form-control-lg">
+                <label for="exampleInputEmail1">Email</label>
+                <input type="email" class="form-control" v-model="email" >
+            </div>
+            <div class="form-group form-control-lg">
+                <label for="exampleInputPassword1">Nascimento</label>
+                <input type="text" class="form-control" v-model="nascimento">
+            </div>
+            <div class="form-group form-control-lg">
+                <label for="telefone">Telefone</label>
+                <input type="tel" class="form-control" v-model="telefone">
+            </div>
+
+            <div class="form-group form-control-lg">
+                <label for="exampleFormControlTextarea1">Mensagem</label>
+                <textarea class="form-control" v-model="mensagem" id="exampleFormControlTextarea1" rows="10"></textarea>
+            </div>
+            <div class="form-group form-control-lg">
+
+                <button type="button" class="btn btn-success" margin="10px" v-if="acao=='Cadastrar'" @click="adicionarUsuario(indice)">Enviar</button>
+                <button v-if="acao=='Cadastrar'" type="button"  class="btn btn-primary" @click="alterarUsuario()">salvar</button>
+                <button type="button" class="btn btn-danger" margin="10px" v-if="acao=='Editar'" @click="cancelarEdicao()">Cancelar</button>
+                
+            </div>
+          </form>
+
+          <table class="table mt-4" width="100%" p >
+            <thead>
+                <tr bgColor="#D6EAF8">
+                    <th>ID</th>
+                    <th>NOME</th>
+                    <th>EMAIL</th>
+                    <th>NASCIMENTO</th>
+                    <th>TELEFONE</th>
+                    <th>MENSAGEM</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(lista, indice) in listaUsuarios">
+                    <td>{{lista.id}}</td>
+                    <td>{{lista.nome}}</td>
+                    <td>{{lista.email}}</td>
+                    <td>{{lista.nascimento}}</td>
+                    <td>{{lista.telefone}}</td>
+                    <td>{{lista.mensagem}}</td>
+                    <td width="10%">{{lista.status}}</td>
+                    <td width="5%">
+                        <button type="button" class="btn btn-primary" btn-sm @click="editarUsuario(indice)">Editar</button>
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script><!-- JavaScript Bundle with Popper -->
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                indice: '',
+                nome: '',
+                email: '',
+                nascimento: '',
+                telefone: '',
+                mensagem: '',
+                listaUsuarios: '',
+                acao: 'Cadastrar',
+            },
+            created() {
+                this.carregarUsuariosNoGrid();
+            },
+            methods: {
+                adicionarUsuario() {
+                    let proximoID = (this.listaUsuarios.length + 1)
+
+                    this.listaUsuarios.push({
+                        "id":proximoID,
+                        "nome": this.nome,
+                        "email": this.email,
+                        "nascimento": this.nascimento,
+                        "telefone": this.telefone,
+                        "mensagem": this.mensagem,
+                    })
+                    this.nome = "";
+                    this.email = "";
+                    this.telefone = "";
+                    this.nascimento = "";
+                    this.mensagem = "";
+                },
+                alterarUsuario() {
+                    this.listaUsuarios[this.indice].nome = this.nome;
+                    this.listaUsuarios[this.indice].email = this.email;
+                    this.listaUsuarios[this.indice].nascimento = this.nascimento;
+                    this.listaUsuarios[this.indice].telefone = this.telefone;
+                    this.listaUsuarios[this.indice].mensagem2 = this.mensagem;
+
+                    this.cancelarEdicao();
+                },
+                cancelarEdicao() {
+                    this.indice = "";
+                    this.nome = "";
+                    this.email = "";
+                    this.nascimento = "";
+                    this.telefone = "";
+                    this.mensagem = "";
+                    this.acao = "cadastrar";
+                },
+                editarUsuario(indice) {
+                    this.indice = indice;
+                    this.nome = this.listaUsuarios[indice].nome;
+                    this.email = this.listaUsuarios[indice].email;
+                    this.nascimento = this.listaUsuarios[indice].nascimento;
+                    this.telefone = this.listaUsuarios[indice].telefone;
+                    this.mensagem = this.listaUsuarios[indice].mensagem;
+
+                    this.acao = "Editar"
+                },
+                cancelarEdicao() {
+                    this.indice = "",
+                    this.nome = "",
+                    this.email = "",
+                    this.nascimento = "",
+                    this.telefone = "",
+                    this.mensagem = "",
+                    this.acao = "Cadastrar";
+                },
+
+               carregarUsuariosNoGrid() {
+                this.listaUsuarios = [
+                    {
+                        "id": "1",
+                        "nome": "RENATO",
+                        "email": "renato@teste.com",
+                        "nascimento": '05/04/1994',
+                        "telefone": 91904165634,
+                        "mensagem": "Salvar dados"
+                    },
+                    {
+                        "id": "2",
+                        "nome": "THIAGO",
+                        "email": "thiago@teste.com",
+                        "nascimento": '05/04/1995',
+                        "telefone": 91904165634,
+                        "mensagem": "Salvar dados"
+                    },
+                    {
+                        "id": "3",
+                        "nome": "ALDO",
+                        "email": "aldo@teste.com",
+                        "nascimento": '05/04/1998',
+                        "telefone": 919467825252,
+                        "mensagem": "Salvar dados"
+                    }
+                ];
+               }
+            }
+        })
+    </script>
+</body>
+</html>
